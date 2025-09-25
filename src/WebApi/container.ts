@@ -6,8 +6,13 @@ import { IEntitiesService } from '../Infrastructure.Endpoint/interfaces/entities
 import { EntitiesService } from '../Infrastructure.Endpoint/services/entitiesService';
 import { ISingletonSqlConnection } from '../Infrastructure.Endpoint/interfaces/database/dbConnection.interface';
 import { SingletonSqlConnection } from '../Infrastructure.Endpoint/database/dbConnection';
+import { ITaskRepository } from '../Domain.Endpoint/interfaces/repositories/task.interface';
+import { TaskRepository } from '../Infrastructure.Endpoint/data/repositories/task.repository';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
 container.registerSingleton<IEntitiesService>('IEntityService', EntitiesService);
 container.register<ISqlCommandOperationBuilder>('IOperationBuilder', { useClass: SqlCommandOperationBuilder });
+
+//task
+container.register<ITaskRepository>('IChickenRepository', { useClass: TaskRepository });
