@@ -4,9 +4,9 @@ import { ServiceResult } from "../../utils/serviceResult.type";
 
 
 export interface ITaskService {
-  getChickens(): Promise<Task[]>;
+  getTasks(): Promise<Task[]>;
   getById(id: string): Promise<Task | null>;
-  addChicken(chicken: TaskDTO): Promise<ServiceResult<Task>>;
-  updateChicken(id: string, chicken: TaskDTO): Promise<ServiceResult<Task | null>>;
-  deleteChicken(id: string): Promise<{ success: boolean; message: string }>;
+  addTask(task: TaskDTO): Promise<ServiceResult<Task>>;
+  updateTask(id: string, task: TaskDTO): Promise<ServiceResult<Task | null>>;
+  deleteTask(id: string): Promise<{ success: boolean; message: string }>;
 }
