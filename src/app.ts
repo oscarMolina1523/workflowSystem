@@ -1,5 +1,7 @@
+import "reflect-metadata";
 import express from 'express';
 import { initializeDatabase } from './Infrastructure.Endpoint/database/init_db';
+import "./WebApi/container";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
