@@ -9,26 +9,27 @@ import { ServiceResult } from "../utils/serviceResult.type";
 export default class TaskService implements ITaskService {
   private readonly _taskRepository: ITaskRepository;
 
-  constructor(@inject('ITaskRepository') taskRepository: ITaskRepository) {
+  constructor(@inject("ITaskRepository") taskRepository: ITaskRepository) {
     this._taskRepository = taskRepository;
   }
 
-  getChickens(): Promise<Task[]> {
-    throw new Error("Method not implemented.");
+  async getTasks(): Promise<Task[]> {
+    return await this._taskRepository.getAll();
   }
+
   getById(id: string): Promise<Task | null> {
     throw new Error("Method not implemented.");
   }
-  addChicken(chicken: TaskDTO): Promise<ServiceResult<Task>> {
+  addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
     throw new Error("Method not implemented.");
   }
-  updateChicken(
+  updateTask(
     id: string,
-    chicken: TaskDTO
+    task: TaskDTO
   ): Promise<ServiceResult<Task | null>> {
     throw new Error("Method not implemented.");
   }
-  deleteChicken(id: string): Promise<{ success: boolean; message: string }> {
+  deleteTask(id: string): Promise<{ success: boolean; message: string }> {
     throw new Error("Method not implemented.");
   }
 }
