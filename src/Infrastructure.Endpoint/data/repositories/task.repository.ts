@@ -3,6 +3,8 @@ import Task from "../../../Domain.Endpoint/entities/task.model";
 import { ITaskRepository } from "../../../Domain.Endpoint/interfaces/repositories/task.interface";
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
+import { EntityType } from "../../utils/entityTypes";
+import { SqlReadOperation } from "../../builders/sqlOperations.enum";
 
 @injectable()
 export class TaskRepository implements ITaskRepository {
@@ -17,8 +19,22 @@ export class TaskRepository implements ITaskRepository {
     this._connection = connection;
   }
 
-  getAll(): Promise<Task[]> {
-    throw new Error("Method not implemented.");
+  async getAll(): Promise<Task[]> {
+    const readCommand = this._operationBuilder
+      .Initialize(EntityType.Task)
+      .WithOperation(SqlReadOperation.Select)
+      .BuildReader();
+     const rows = await this._connection.executeQuery(readCommand);
+
+    return rows.map(row => new Task(
+      row["ID"], 
+      row["TITLE"],
+      row["DESCRIPTION"],
+      row["STATUS"],
+      row["AREA_ID"],
+      row["CREATED_BY"],
+      row["ASSIGNED_TO"],
+    ));
   }
   getById(id: string): Promise<Task | null> {
     throw new Error("Method not implemented.");
