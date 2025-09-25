@@ -15,4 +15,4 @@ container.registerSingleton<IEntitiesService>('IEntityService', EntitiesService)
 container.register<ISqlCommandOperationBuilder>('IOperationBuilder', { useClass: SqlCommandOperationBuilder });
 
 //task
-container.register<ITaskRepository>('IChickenRepository', { useClass: TaskRepository });
+container.register<ITaskRepository>('ITaskRepository', { useClass: TaskRepository });
