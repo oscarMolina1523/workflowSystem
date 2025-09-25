@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import Task from "../../../Domain.Endpoint/entities/task.model";
-import { ITaskRepository } from "../../../Domain.Endpoint/interfaces/repositories/task.interface";
+import { ITaskRepository } from "../../../Domain.Endpoint/interfaces/repositories/taskRepository.interface";
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../../utils/entityTypes";
