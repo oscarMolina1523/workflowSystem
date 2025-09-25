@@ -1,12 +1,11 @@
 import { SqlReadOperation, SqlWriteOperation } from "./sqlOperations.enum";
 import { SqlColumnSettings } from "./sqlEntitySettings";
-import { inject, injectable } from "tsyringe";
 import { SqlCommand } from "../interfaces/sqlCommand.interface";
 import BaseModel from "../../Domain.Endpoint/entities/base.model";
 import { EntityType } from "../utils/entityTypes";
 import { IExecuteReadBuilder, IExecuteWriteBuilder, IHavePrimaryKeyValue, IHaveSqlReadOperation, IHaveSqlWriteOperation, ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { IEntitiesService } from "../interfaces/entitiesService.interface";
-
+import { inject, injectable } from "tsyringe";
 @injectable()
 export class SqlCommandOperationBuilder implements ISqlCommandOperationBuilder {
   private readonly _entitiesService: IEntitiesService;
