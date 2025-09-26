@@ -30,9 +30,19 @@ export default class RoleService implements IRoleService {
     return { success: true, message: "Role created", data: newRole };
   }
 
-  updateRole(id: string, role: RoleDTO): Promise<ServiceResult<Role | null>> {
-    throw new Error("Method not implemented.");
+  async updateRole(id: string, role: RoleDTO): Promise<ServiceResult<Role | null>> {
+    const existing = await this._roleRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Role not found", data: null };
+    }
+
+    // actualizar solo las propiedades necesarias
+    Object.assign(existing, role);
+    await this._roleRepository.update(existing);
+
+    return { success: true, message: "Role updated", data: existing };
   }
+
   deleteRole(id: string): Promise<{ success: boolean; message: string }> {
     throw new Error("Method not implemented.");
   }
