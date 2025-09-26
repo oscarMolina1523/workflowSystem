@@ -8,6 +8,7 @@ import cors from 'cors';
 import taskRoutes from "./WebApi/routes/task.routes";
 import userRoutes from "./WebApi/routes/user.routes";
 import authRoutes from "./WebApi/routes/auth.routes";
+import { validateToken } from "./WebApi/utils/jwtUtils";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,9 +18,10 @@ app.use(express.json());
 app.use(cors())
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
-app.use("/tasks", taskRoutes);
-app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/tasks", validateToken, taskRoutes);
+app.use("/users", validateToken, userRoutes);
+
 
 async function startServer() {
     try {
