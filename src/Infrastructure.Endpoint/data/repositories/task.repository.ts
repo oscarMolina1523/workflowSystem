@@ -65,9 +65,16 @@ export class TaskRepository implements ITaskRepository {
 
     await this._connection.executeNonQuery(writeCommand);
   }
-  update(task: Task): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async update(task: Task): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Task, task)
+      .WithOperation(SqlWriteOperation.Update)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
+  
   delete(task: Task): Promise<void> {
     throw new Error("Method not implemented.");
   }
