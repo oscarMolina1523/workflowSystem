@@ -73,8 +73,13 @@ export default class RoleRepository implements IRoleRepository {
 
     await this._connection.executeNonQuery(writeCommand);
   }
-  
-  delete(role: Role): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(role: Role): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Role, role)
+      .WithOperation(SqlWriteOperation.Delete)
+      .BuildWritter();
+      
+    await this._connection.executeNonQuery(writeCommand);
   }
 }
