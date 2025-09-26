@@ -2,10 +2,20 @@ import "reflect-metadata";
 import express from 'express';
 import { initializeDatabase } from './Infrastructure.Endpoint/database/init_db';
 import "./WebApi/container";
+import swaggerUI from "swagger-ui-express";
+import specs from "./WebApi/swagger/swagger";
+import cors from 'cors';
+import taskRoutes from "./WebApi/routes/task.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors())
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/tasks", taskRoutes);
 
 async function startServer() {
     try {
