@@ -43,7 +43,13 @@ export default class RoleService implements IRoleService {
     return { success: true, message: "Role updated", data: existing };
   }
 
-  deleteRole(id: string): Promise<{ success: boolean; message: string }> {
-    throw new Error("Method not implemented.");
+  async deleteRole(id: string): Promise<{ success: boolean; message: string }> {
+    const existing = await this._roleRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Role not found" };
+    }
+
+    await this._roleRepository.delete(existing);
+    return { success: true, message: "Role deleted" };
   }
 }
