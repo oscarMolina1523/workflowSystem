@@ -4,7 +4,7 @@ export interface IUserRepository {
   getAll(): Promise<User[]>;
   getById(id: string): Promise<User | null>;
   getByEmail(id: string): Promise<User | null>;
-  create(User: User): Promise<void>;
-  update(User: User): Promise<void>;
-  delete(User: User): Promise<void>;
+  create(user: User): Promise<void>;
+  update(user: User): Promise<void>;
+  delete(user: User): Promise<void>;
 }
