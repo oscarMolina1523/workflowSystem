@@ -21,21 +21,38 @@ export default class RoleRepository implements IRoleRepository {
 
   async getAll(): Promise<Role[]> {
     const readCommand = this._operationBuilder
-          .Initialize(EntityType.Role)
-          .WithOperation(SqlReadOperation.Select)
-          .BuildReader();
-         const rows = await this._connection.executeQuery(readCommand);
-    
-        return rows.map(row => new Role({
-          id: row["ID"], 
+      .Initialize(EntityType.Role)
+      .WithOperation(SqlReadOperation.Select)
+      .BuildReader();
+    const rows = await this._connection.executeQuery(readCommand);
+
+    return rows.map(
+      (row) =>
+        new Role({
+          id: row["ID"],
           name: row["NAME"],
           description: row["DESCRIPTION"],
-        }));
+        })
+    );
+  }
+
+  async getById(id: string): Promise<Role | null> {
+    const readCommand = this._operationBuilder
+      .Initialize(EntityType.Role)
+      .WithOperation(SqlReadOperation.SelectById)
+      .WithId(id)
+      .BuildReader();
+
+    const row = await this._connection.executeScalar(readCommand);
+    if (!row) return null;
+
+    return new Role({
+      id: row["ID"],
+      name: row["NAME"],
+      description: row["DESCRIPTION"],
+    });
   }
   
-  getById(id: string): Promise<Role | null> {
-    throw new Error("Method not implemented.");
-  }
   create(role: Role): Promise<void> {
     throw new Error("Method not implemented.");
   }
