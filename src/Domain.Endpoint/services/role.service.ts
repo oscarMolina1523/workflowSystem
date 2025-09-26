@@ -17,9 +17,10 @@ export default class RoleService implements IRoleService {
     return await this._roleRepository.getAll();
   }
 
-  getById(id: string): Promise<Role | null> {
-    throw new Error("Method not implemented.");
+  async getById(id: string): Promise<Role | null> {
+   return await this._roleRepository.getById(id);
   }
+
   addRole(role: RoleDTO): Promise<ServiceResult<Role>> {
     throw new Error("Method not implemented.");
   }
