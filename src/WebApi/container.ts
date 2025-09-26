@@ -15,6 +15,7 @@ import { IUserRepository } from '../Domain.Endpoint/interfaces/repositories/user
 import { UserRepository } from '../Infrastructure.Endpoint/data/repositories/user.repository';
 import { IUserService } from '../Domain.Endpoint/interfaces/services/userService.interfaz';
 import UserService from '../Domain.Endpoint/services/user.service';
+import UserController from './controllers/user.controller';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -29,3 +30,4 @@ container.register<TaskController>('TaskController', { useClass: TaskController 
 //user
 container.register<IUserRepository>('IUserRepository', { useClass: UserRepository });
 container.register<IUserService>('IUserService', { useClass: UserService });
+container.register<UserController>('UserController', { useClass: UserController });
