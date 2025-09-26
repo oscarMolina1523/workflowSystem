@@ -27,7 +27,7 @@ export default class TaskService implements ITaskService {
     const newTask = new Task({id: id, ...task});
     await this._taskRepository.create(newTask);
 
-    return { success: true, message: "User created", data: newTask };
+    return { success: true, message: "Task created", data: newTask };
   }
 
   async updateTask(
