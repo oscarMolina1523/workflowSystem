@@ -26,15 +26,15 @@ export class TaskRepository implements ITaskRepository {
       .BuildReader();
      const rows = await this._connection.executeQuery(readCommand);
 
-    return rows.map(row => new Task(
-      row["ID"], 
-      row["TITLE"],
-      row["DESCRIPTION"],
-      row["STATUS"],
-      row["AREA_ID"],
-      row["CREATED_BY"],
-      row["ASSIGNED_TO"],
-    ));
+    return rows.map(row => new Task({
+      id: row["ID"], 
+      title: row["TITLE"],
+      description: row["DESCRIPTION"],
+      status: row["STATUS"],
+      areaId: row["AREA_ID"],
+      createdBy: row["CREATED_BY"],
+      assignedTo: row["ASSIGNED_TO"],
+    }));
   }
   getById(id: string): Promise<Task | null> {
     throw new Error("Method not implemented.");
