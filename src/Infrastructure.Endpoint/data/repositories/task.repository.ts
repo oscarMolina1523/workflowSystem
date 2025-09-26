@@ -36,8 +36,25 @@ export class TaskRepository implements ITaskRepository {
       assignedTo: row["ASSIGNED_TO"],
     }));
   }
-  getById(id: string): Promise<Task | null> {
-    throw new Error("Method not implemented.");
+  async getById(id: string): Promise<Task | null> {
+    const readCommand = this._operationBuilder
+      .Initialize(EntityType.Task)
+      .WithOperation(SqlReadOperation.SelectById)
+      .WithId(id)
+      .BuildReader();
+
+    const row = await this._connection.executeScalar(readCommand);
+    if (!row) return null;
+
+    return new Task({
+      id: row["ID"], 
+      title: row["TITLE"],
+      description: row["DESCRIPTION"],
+      status: row["STATUS"],
+      areaId: row["AREA_ID"],
+      createdBy: row["CREATED_BY"],
+      assignedTo: row["ASSIGNED_TO"],
+    });
   }
   create(task: Task): Promise<void> {
     throw new Error("Method not implemented.");
