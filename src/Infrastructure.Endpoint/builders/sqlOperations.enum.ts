@@ -7,4 +7,5 @@ export enum SqlWriteOperation {
 export enum SqlReadOperation {
   Select,
   SelectById,
+  SelectByField,
 }

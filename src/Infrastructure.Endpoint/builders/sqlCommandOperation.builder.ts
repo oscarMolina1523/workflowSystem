@@ -3,7 +3,14 @@ import { SqlColumnSettings } from "./sqlEntitySettings";
 import { SqlCommand } from "../interfaces/sqlCommand.interface";
 import BaseModel from "../../Domain.Endpoint/entities/base.model";
 import { EntityType } from "../utils/entityTypes";
-import { IExecuteReadBuilder, IExecuteWriteBuilder, IHavePrimaryKeyValue, IHaveSqlReadOperation, IHaveSqlWriteOperation, ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
+import {
+  IExecuteReadBuilder,
+  IExecuteWriteBuilder,
+  IHavePrimaryKeyValue,
+  IHaveSqlReadOperation,
+  IHaveSqlWriteOperation,
+  ISqlCommandOperationBuilder,
+} from "../interfaces/sqlCommandOperation.interface";
 import { IEntitiesService } from "../interfaces/entitiesService.interface";
 import { inject, injectable } from "tsyringe";
 @injectable()
@@ -128,11 +135,11 @@ export class SqlCommandWriteBuilder<TEntity extends BaseModel>
     );
     //const parameters = this.getSqlParameters(entitySettings.columns);
     const parameters = [
-    {
-      name: primaryKey.parameterName,
-      value: (this.entity as any)[primaryKey.domainName],
-    },
-  ];
+      {
+        name: primaryKey.parameterName,
+        value: (this.entity as any)[primaryKey.domainName],
+      },
+    ];
     return { query: sqlQuery, parameters };
   }
 
@@ -164,6 +171,8 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
   private readonly entitiesService: IEntitiesService;
   private entityType: EntityType;
   private idValue?: string; // se guarda el Id si la operación es GetById
+  private fieldName?: string; // se guarda el nombre del campo para operaciones futuras
+  private fieldValue?: any; // se guarda el valor del campo para operaciones futuras
 
   constructor(entitiesService: IEntitiesService, entityType: EntityType) {
     this.entitiesService = entitiesService;
@@ -180,12 +189,20 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
     return this;
   }
 
+  WithField(fieldName: string, value: any): IExecuteReadBuilder {
+    this.fieldName = fieldName;
+    this.fieldValue = value;
+    return this;
+  }
+
   BuildReader(): SqlCommand {
     switch (this.operation) {
       case SqlReadOperation.Select:
         return this.getSelectAllCommand();
       case SqlReadOperation.SelectById:
         return this.getSelectByIdCommand();
+      case SqlReadOperation.SelectByField:
+        return this.getSelectByFieldCommand();
       default:
         throw new Error("Invalid read operation.");
     }
@@ -242,5 +259,61 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
         value: this.idValue,
       },
     ];
+  }
+
+  private getFieldParameter(
+    columns: SqlColumnSettings[],
+    fieldName: string,
+    fieldValue: any
+  ): { name: string; value: any }[] {
+    const column = columns.find(
+      (c) => c.domainName.toLowerCase() === fieldName.toLowerCase()
+    );
+    if (!column) throw new Error(`Column "${fieldName}" not found.`);
+
+    return [
+      {
+        name: column.parameterName,
+        value: fieldValue,
+      },
+    ];
+  }
+
+  private getSelectByFieldCommand(): SqlCommand {
+    const entitySettings = this.entitiesService.GetSettings(this.entityType);
+
+    if (!this.fieldName || this.fieldValue === undefined) {
+      throw new Error(
+        "Field name and value must be provided for SelectByField."
+      );
+    }
+
+    const sqlQuery = this.getSelectByFieldQuery(
+      entitySettings.tableName,
+      entitySettings.columns,
+      this.fieldName
+    );
+
+    const parameters = this.getFieldParameter(
+      entitySettings.columns,
+      this.fieldName,
+      this.fieldValue
+    );
+
+    return { query: sqlQuery, parameters };
+  }
+
+  private getSelectByFieldQuery(
+    entityName: string,
+    columns: SqlColumnSettings[],
+    fieldName: string
+  ): string {
+    const column = columns.find(
+      (c) => c.domainName.toLowerCase() === fieldName.toLowerCase()
+    );
+    if (!column) throw new Error(`Column "${fieldName}" not found.`);
+
+    const columnNames = columns.map((c) => c.name).join(", ");
+    return `SELECT ${columnNames} FROM ${entityName} WHERE ${column.name} = ${column.parameterName};`;
   }
 }

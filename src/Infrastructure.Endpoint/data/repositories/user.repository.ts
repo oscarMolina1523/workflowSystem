@@ -4,7 +4,10 @@ import { IUserRepository } from "../../../Domain.Endpoint/interfaces/repositorie
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
+import {
+  SqlReadOperation,
+  SqlWriteOperation,
+} from "../../builders/sqlOperations.enum";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -59,8 +62,26 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  getByEmail(id: string): Promise<User | null> {
-    throw new Error("Method not implemented.");
+  async getByEmail(email: string): Promise<User | null> {
+    const builder = this._operationBuilder!.Initialize(
+      EntityType.User
+    ).WithOperation(SqlReadOperation.SelectByField);
+
+    if (!builder.WithField) throw new Error("WithField no implementado");
+
+    const readCommand = builder.WithField("email", email).BuildReader();
+
+    const row = await this._connection.executeScalar(readCommand);
+    if (!row) return null;
+
+    return new User({
+      id: row["ID"],
+      name: row["NAME"],
+      email: row["EMAIL"],
+      password: row["PASSWORD"],
+      areaId: row["AREA_ID"],
+      roleId: row["ROLE_ID"],
+    });
   }
 
   async create(user: User): Promise<void> {
@@ -86,7 +107,7 @@ export class UserRepository implements IUserRepository {
       .From(EntityType.User, user)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
-      
+
     await this._connection.executeNonQuery(writeCommand);
   }
 }
