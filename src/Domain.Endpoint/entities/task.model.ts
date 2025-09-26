@@ -9,7 +9,23 @@ export default class Task extends BaseModel{
     assignedTo:string;
     description?:string  | undefined;
 
-    constructor(id:string, title:string, status:Status, areaId:string, createdBy:string, assignedTo:string, description?:string,){
+    constructor({
+    id,
+    title,
+    status,
+    areaId,
+    createdBy,
+    assignedTo,
+    description,
+  }: {
+    id: string;
+    title: string;
+    status: Status;
+    areaId: string;
+    createdBy: string;
+    assignedTo: string;
+    description?: string;
+  }){
         super(id);
         this.title=title;
         this.description=description;
