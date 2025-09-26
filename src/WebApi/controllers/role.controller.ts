@@ -44,9 +44,7 @@ export default class RoleController {
   addRole = async (req: Request, res: Response) => {
     const roleDto: RoleDTO = req.body;
 
-    if (
-      !roleDto.name 
-    ) {
+    if (!roleDto.name) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -59,6 +57,37 @@ export default class RoleController {
       });
     } catch {
       res.status(400).json({ message: "Failed to add the role" });
+    }
+  };
+
+  updateRole = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
+    const updatedData: RoleDTO = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "Role ID is required." });
+    }
+    //este es para testear que haya al menos un campo a actualizar
+    if (Object.keys(updatedData).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No fields provided for update." });
+    }
+
+    try {
+      const success = await this.service.updateRole(id, updatedData);
+
+      if (success) {
+        res.status(200).json({
+          success: success.success,
+          data: success.data,
+          message: success.message,
+        });
+      } else {
+        res.status(404).json({ message: "Role not found" });
+      }
+    } catch {
+      res.status(400).json({ message: "Failed to update role" });
     }
   };
 }
