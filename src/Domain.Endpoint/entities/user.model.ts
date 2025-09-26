@@ -5,16 +5,23 @@ export class User extends BaseModel {
   email: string;
   password: string;
   areaId: string;
-  roleId:string;
+  roleId: string;
 
-  constructor(
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    areaId: string,
-    roleId:string
-  ) {
+  constructor({
+    id,
+    name,
+    email,
+    password,
+    areaId,
+    roleId,
+  }: {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    areaId: string;
+    roleId: string;
+  }) {
     super(id);
     this.name = name;
     this.email = email;

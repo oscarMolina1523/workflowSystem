@@ -11,6 +11,8 @@ import { TaskRepository } from '../Infrastructure.Endpoint/data/repositories/tas
 import { ITaskService } from '../Domain.Endpoint/interfaces/services/taskService.interface';
 import TaskService from '../Domain.Endpoint/services/task.service';
 import TaskController from './controllers/task.controller';
+import { IUserRepository } from '../Domain.Endpoint/interfaces/repositories/userRepository.interface';
+import { UserRepository } from '../Infrastructure.Endpoint/data/repositories/user.repository';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -21,3 +23,6 @@ container.register<ISqlCommandOperationBuilder>('IOperationBuilder', { useClass:
 container.register<ITaskRepository>('ITaskRepository', { useClass: TaskRepository });
 container.register<ITaskService>('ITaskService', { useClass: TaskService });
 container.register<TaskController>('TaskController', { useClass: TaskController });
+
+//user
+container.register<IUserRepository>('IUserRepository', { useClass: UserRepository });

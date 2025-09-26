@@ -1,15 +1,15 @@
-import BaseModel from "./base.model"
+import BaseModel from "./base.model";
 import { Status } from "./status.enum";
 
-export default class Task extends BaseModel{
-    title:string;
-    status: Status;
-    areaId:string;
-    createdBy:string;
-    assignedTo:string;
-    description?:string  | undefined;
+export default class Task extends BaseModel {
+  title: string;
+  status: Status;
+  areaId: string;
+  createdBy: string;
+  assignedTo: string;
+  description?: string | undefined;
 
-    constructor({
+  constructor({
     id,
     title,
     status,
@@ -25,13 +25,13 @@ export default class Task extends BaseModel{
     createdBy: string;
     assignedTo: string;
     description?: string;
-  }){
-        super(id);
-        this.title=title;
-        this.description=description;
-        this.status=status;
-        this.areaId=areaId;
-        this.createdBy=createdBy;
-        this.assignedTo=assignedTo;
-    }
+  }) {
+    super(id);
+    this.title = title;
+    this.description = description;
+    this.status = status;
+    this.areaId = areaId;
+    this.createdBy = createdBy;
+    this.assignedTo = assignedTo;
+  }
 }
