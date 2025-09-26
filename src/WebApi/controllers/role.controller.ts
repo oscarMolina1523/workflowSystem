@@ -90,4 +90,26 @@ export default class RoleController {
       res.status(400).json({ message: "Failed to update role" });
     }
   };
+
+  deleteRole = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "Role ID is required." });
+    }
+
+    try {
+      const result = await this.service.deleteRole(id);
+
+      if (result) {
+        res.status(200).json({
+          success: result.success,
+          message: "Role deleted successfully",
+        });
+      } else {
+        res.status(404).json({ message: "Role not found" });
+      }
+    } catch {
+      res.status(400).json({ message: "Failed to delete role" });
+    }
+  };
 }
