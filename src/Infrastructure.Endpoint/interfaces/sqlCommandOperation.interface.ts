@@ -22,6 +22,8 @@ export interface IHaveSqlReadOperation {
 
 export interface IHavePrimaryKeyValue extends IExecuteReadBuilder {
   WithId(id: string): IExecuteReadBuilder;
+
+  WithField?(fieldName: string, value: any): IExecuteReadBuilder;
 }
 
 export interface IExecuteReadBuilder {
