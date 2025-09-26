@@ -36,6 +36,7 @@ export class TaskRepository implements ITaskRepository {
       assignedTo: row["ASSIGNED_TO"],
     }));
   }
+  
   async getById(id: string): Promise<Task | null> {
     const readCommand = this._operationBuilder
       .Initialize(EntityType.Task)
