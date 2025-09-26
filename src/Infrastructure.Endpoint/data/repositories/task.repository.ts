@@ -4,7 +4,7 @@ import { ITaskRepository } from "../../../Domain.Endpoint/interfaces/repositorie
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation } from "../../builders/sqlOperations.enum";
+import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
 
 @injectable()
 export class TaskRepository implements ITaskRepository {
@@ -56,8 +56,14 @@ export class TaskRepository implements ITaskRepository {
       assignedTo: row["ASSIGNED_TO"],
     });
   }
-  create(task: Task): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async create(task: Task): Promise<void> {
+     const writeCommand = this._operationBuilder
+      .From(EntityType.Task, task)
+      .WithOperation(SqlWriteOperation.Create)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
   update(task: Task): Promise<void> {
     throw new Error("Method not implemented.");
