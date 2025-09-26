@@ -1,23 +1,32 @@
+import { inject, injectable } from "tsyringe";
 import { RoleDTO } from "../dtos/role.dto";
 import Role from "../entities/role.model";
-import { IRoleService } from "../interfaces/services/roleService.interface";
 import { ServiceResult } from "../utils/serviceResult.type";
+import { IRoleRepository } from "../interfaces/repositories/roleRepository.interface";
+import { IRoleService } from "../interfaces/services/roleService.interface";
 
+@injectable()
 export default class RoleService implements IRoleService {
-    getRoles(): Promise<Role[]> {
-        throw new Error("Method not implemented.");
-    }
-    getById(id: string): Promise<Role | null> {
-        throw new Error("Method not implemented.");
-    }
-    addRole(role: RoleDTO): Promise<ServiceResult<Role>> {
-        throw new Error("Method not implemented.");
-    }
-    updateRole(id: string, role: RoleDTO): Promise<ServiceResult<Role | null>> {
-        throw new Error("Method not implemented.");
-    }
-    deleteRole(id: string): Promise<{ success: boolean; message: string; }> {
-        throw new Error("Method not implemented.");
-    }
+  private readonly _roleRepository: IRoleRepository;
 
+  constructor(@inject("IRoleRepository") roleRepository: IRoleRepository) {
+    this._roleRepository = roleRepository;
+  }
+
+  async getRoles(): Promise<Role[]> {
+    return await this._roleRepository.getAll();
+  }
+
+  getById(id: string): Promise<Role | null> {
+    throw new Error("Method not implemented.");
+  }
+  addRole(role: RoleDTO): Promise<ServiceResult<Role>> {
+    throw new Error("Method not implemented.");
+  }
+  updateRole(id: string, role: RoleDTO): Promise<ServiceResult<Role | null>> {
+    throw new Error("Method not implemented.");
+  }
+  deleteRole(id: string): Promise<{ success: boolean; message: string }> {
+    throw new Error("Method not implemented.");
+  }
 }
