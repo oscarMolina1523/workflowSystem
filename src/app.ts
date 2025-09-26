@@ -6,6 +6,7 @@ import swaggerUI from "swagger-ui-express";
 import specs from "./WebApi/swagger/swagger";
 import cors from 'cors';
 import taskRoutes from "./WebApi/routes/task.routes";
+import userRoutes from "./WebApi/routes/user.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ app.use(cors())
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/tasks", taskRoutes);
+app.use("/users", userRoutes);
 
 async function startServer() {
     try {
