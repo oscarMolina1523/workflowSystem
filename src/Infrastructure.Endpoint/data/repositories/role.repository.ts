@@ -4,7 +4,10 @@ import { IRoleRepository } from "../../../Domain.Endpoint/interfaces/repositorie
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
+import {
+  SqlReadOperation,
+  SqlWriteOperation,
+} from "../../builders/sqlOperations.enum";
 
 @injectable()
 export default class RoleRepository implements IRoleRepository {
@@ -62,9 +65,15 @@ export default class RoleRepository implements IRoleRepository {
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  update(role: Role): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(role: Role): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Role, role)
+      .WithOperation(SqlWriteOperation.Update)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
+  
   delete(role: Role): Promise<void> {
     throw new Error("Method not implemented.");
   }
