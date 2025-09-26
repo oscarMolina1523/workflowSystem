@@ -64,4 +64,61 @@ export default class TaskController {
       res.status(400).json({ message: "Failed to add the task" });
     }
   };
+
+  updateTask = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
+    const updatedData: TaskDTO = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: "TASK ID is required." });
+    }
+    //este es para testear que haya al menos un campo a actualizar
+    if (Object.keys(updatedData).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No fields provided for update." });
+    }
+
+    try {
+      const success = await this.service.updateTask(id, updatedData);
+
+      if (success) {
+        res
+          .status(200)
+          .json({
+            success: success.success,
+            data: success.data,
+            message: success.message,
+          });
+      } else {
+        res.status(404).json({ message: "Task not found" });
+      }
+    } catch {
+      res.status(400).json({ message: "Failed to update task" });
+    }
+  };
+
+  deleteTask = async (req: Request, res: Response) => {
+    const id: string | undefined = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "Task ID is required." });
+    }
+
+    try {
+      const result = await this.service.deleteTask(id);
+
+      if (result) {
+        res
+          .status(200)
+          .json({
+            success: result.success,
+            message: "Task deleted successfully",
+          });
+      } else {
+        res.status(404).json({ message: "Task not found" });
+      }
+    } catch {
+      res.status(400).json({ message: "Failed to delete task" });
+    }
+  };
 }
