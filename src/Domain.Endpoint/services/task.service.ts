@@ -4,6 +4,7 @@ import Task from "../entities/task.model";
 import { ITaskRepository } from "../interfaces/repositories/taskRepository.interface";
 import { ITaskService } from "../interfaces/services/taskService.interface";
 import { ServiceResult } from "../utils/serviceResult.type";
+import { generateId } from "../utils/generateId";
 
 @injectable()
 export default class TaskService implements ITaskService {
@@ -17,19 +18,41 @@ export default class TaskService implements ITaskService {
     return await this._taskRepository.getAll();
   }
 
-  getById(id: string): Promise<Task | null> {
-    throw new Error("Method not implemented.");
+  async getById(id: string): Promise<Task | null> {
+    return await this._taskRepository.getById(id);
   }
-  addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
-    throw new Error("Method not implemented.");
+
+  async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
+    const id = generateId();
+    const newTask = new Task({id: id, ...task});
+    await this._taskRepository.create(newTask);
+
+    return { success: true, message: "Chicken created", data: newTask };
   }
-  updateTask(
+
+  async updateTask(
     id: string,
     task: TaskDTO
   ): Promise<ServiceResult<Task | null>> {
-    throw new Error("Method not implemented.");
+    const existing = await this._taskRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Task not found", data: null };
+    }
+
+    // actualizar solo las propiedades necesarias
+    Object.assign(existing, task);
+    await this._taskRepository.update(existing);
+
+    return { success: true, message: "Task updated", data: existing };
   }
-  deleteTask(id: string): Promise<{ success: boolean; message: string }> {
-    throw new Error("Method not implemented.");
+
+  async deleteTask(id: string): Promise<{ success: boolean; message: string }> {
+    const existing = await this._taskRepository.getById(id);
+    if (!existing) {
+      return { success: false, message: "Task not found" };
+    }
+
+    await this._taskRepository.delete(existing);
+    return { success: true, message: "Task deleted" };
   }
 }
