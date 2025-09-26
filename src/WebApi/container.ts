@@ -42,4 +42,4 @@ container.register<AuthController>('AuthController', { useClass: AuthController 
 
 //role
 container.register<IRoleRepository>('IRoleRepository', { useClass: RoleRepository });
-container.register<IRoleService>('RoleService', { useClass: RoleService });
+container.register<IRoleService>('IRoleService', { useClass: RoleService });
