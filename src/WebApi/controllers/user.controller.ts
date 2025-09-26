@@ -42,9 +42,9 @@ export default class UserController {
   };
 
   getUserByEmail = async (req: Request, res: Response) => {
-    //http://localhost:3000/users?email=oscar@gmail.com
+    //http://localhost:3000/users/email/admin@empresa.com
 
-    const email = req.query.email as string;
+    const email = req.params.email;
 
     if (!email) {
       return res.status(400).json({ message: "Email is required." });
