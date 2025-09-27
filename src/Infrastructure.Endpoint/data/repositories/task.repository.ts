@@ -77,7 +77,7 @@ export class TaskRepository implements ITaskRepository {
     if (!rows || rows.length === 0) return [];
 
     return rows.map(
-      (row: any) =>
+      (row) =>
         new Task({
           id: row["ID"],
           title: row["TITLE"],
