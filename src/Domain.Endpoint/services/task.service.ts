@@ -27,6 +27,19 @@ export default class TaskService implements ITaskService {
     return await this._taskRepository.getByAreaId(areaId);
   }
 
+  async getTasksPendingValidation(currentUser: {
+    role: string;
+  }): Promise<Task[]> {
+    //este es el id de admin en los roles
+    if (currentUser.role !== "2d5c7f8e-1b3a-4c9d-8f0a-7e6b5a4d3c2b") {
+      throw new Error(
+        "Access denied. Only admin can view tasks pending validation."
+      );
+    }
+
+    return await this._taskRepository.getByStatus("PENDING_VALIDATION");
+  }
+
   async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
     const id = generateId();
     const newTask = new Task({ id: id, ...task });
@@ -45,7 +58,10 @@ export default class TaskService implements ITaskService {
       return { success: false, message: "Task not found", data: null };
     }
     //este es el id de admin en los roles
-    if (currentUser.role !== "2d5c7f8e-1b3a-4c9d-8f0a-7e6b5a4d3c2b" && task.status === Status.DONE) {
+    if (
+      currentUser.role !== "2d5c7f8e-1b3a-4c9d-8f0a-7e6b5a4d3c2b" &&
+      task.status === Status.DONE
+    ) {
       existing.status = Status.PENDING_VALIDATION;
     } else {
       // actualizar solo las propiedades necesarias
