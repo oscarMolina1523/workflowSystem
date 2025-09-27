@@ -4,7 +4,10 @@ import { ITaskRepository } from "../../../Domain.Endpoint/interfaces/repositorie
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
+import {
+  SqlReadOperation,
+  SqlWriteOperation,
+} from "../../builders/sqlOperations.enum";
 
 @injectable()
 export class TaskRepository implements ITaskRepository {
@@ -24,19 +27,22 @@ export class TaskRepository implements ITaskRepository {
       .Initialize(EntityType.Task)
       .WithOperation(SqlReadOperation.Select)
       .BuildReader();
-     const rows = await this._connection.executeQuery(readCommand);
+    const rows = await this._connection.executeQuery(readCommand);
 
-    return rows.map(row => new Task({
-      id: row["ID"], 
-      title: row["TITLE"],
-      description: row["DESCRIPTION"],
-      status: row["STATUS"],
-      areaId: row["AREA_ID"],
-      createdBy: row["CREATED_BY"],
-      assignedTo: row["ASSIGNED_TO"],
-    }));
+    return rows.map(
+      (row) =>
+        new Task({
+          id: row["ID"],
+          title: row["TITLE"],
+          description: row["DESCRIPTION"],
+          status: row["STATUS"],
+          areaId: row["AREA_ID"],
+          createdBy: row["CREATED_BY"],
+          assignedTo: row["ASSIGNED_TO"],
+        })
+    );
   }
-  
+
   async getById(id: string): Promise<Task | null> {
     const readCommand = this._operationBuilder
       .Initialize(EntityType.Task)
@@ -48,7 +54,7 @@ export class TaskRepository implements ITaskRepository {
     if (!row) return null;
 
     return new Task({
-      id: row["ID"], 
+      id: row["ID"],
       title: row["TITLE"],
       description: row["DESCRIPTION"],
       status: row["STATUS"],
@@ -58,8 +64,34 @@ export class TaskRepository implements ITaskRepository {
     });
   }
 
+  async getByAreaId(areaId: string): Promise<Task[]> {
+    const builder = this._operationBuilder!.Initialize(
+      EntityType.Task
+    ).WithOperation(SqlReadOperation.SelectByField);
+
+    if (!builder.WithField) throw new Error("WithField no implementado");
+
+    const readCommand = builder.WithField("areaId", areaId).BuildReader();
+
+    const rows = await this._connection.executeQuery(readCommand);
+    if (!rows || rows.length === 0) return [];
+
+    return rows.map(
+      (row: any) =>
+        new Task({
+          id: row["ID"],
+          title: row["TITLE"],
+          description: row["DESCRIPTION"],
+          status: row["STATUS"],
+          areaId: row["AREA_ID"],
+          createdBy: row["CREATED_BY"],
+          assignedTo: row["ASSIGNED_TO"],
+        })
+    );
+  }
+
   async create(task: Task): Promise<void> {
-     const writeCommand = this._operationBuilder
+    const writeCommand = this._operationBuilder
       .From(EntityType.Task, task)
       .WithOperation(SqlWriteOperation.Create)
       .BuildWritter();
@@ -81,7 +113,7 @@ export class TaskRepository implements ITaskRepository {
       .From(EntityType.Task, task)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
-      
+
     await this._connection.executeNonQuery(writeCommand);
   }
 }
