@@ -37,7 +37,7 @@ export default class TaskService implements ITaskService {
       );
     }
 
-    return await this._taskRepository.getByStatus("PENDING_VALIDATION");
+    return await this._taskRepository.getByStatus("pending_validation");
   }
 
   async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
