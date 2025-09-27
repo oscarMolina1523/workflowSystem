@@ -38,7 +38,7 @@ export class AreaRepository implements IAreaRepository {
 
   async getById(id: string): Promise<Area | null> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Role)
+      .Initialize(EntityType.Area)
       .WithOperation(SqlReadOperation.SelectById)
       .WithId(id)
       .BuildReader();
@@ -53,27 +53,27 @@ export class AreaRepository implements IAreaRepository {
     });
   }
 
-  async create(role: Area): Promise<void> {
+  async create(area: Area): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Role, role)
+      .From(EntityType.Area, area)
       .WithOperation(SqlWriteOperation.Create)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async update(role: Area): Promise<void> {
+  async update(area: Area): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Role, role)
+      .From(EntityType.Area, area)
       .WithOperation(SqlWriteOperation.Update)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async delete(role: Area): Promise<void> {
+  async delete(area: Area): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Role, role)
+      .From(EntityType.Area, area)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
       

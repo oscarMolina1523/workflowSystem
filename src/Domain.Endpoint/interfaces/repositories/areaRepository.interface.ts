@@ -3,7 +3,7 @@ import Area from "../../entities/area.model";
 export interface IAreaRepository {
   getAll(): Promise<Area[]>;
   getById(id: string): Promise<Area | null>;
-  create(role: Area): Promise<void>;
-  update(role: Area): Promise<void>;
-  delete(role: Area): Promise<void>;
+  create(area: Area): Promise<void>;
+  update(area: Area): Promise<void>;
+  delete(area: Area): Promise<void>;
 }
