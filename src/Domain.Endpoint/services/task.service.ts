@@ -13,7 +13,7 @@ export default class TaskService implements ITaskService {
   constructor(@inject("ITaskRepository") taskRepository: ITaskRepository) {
     this._taskRepository = taskRepository;
   }
-
+  
   async getTasks(): Promise<Task[]> {
     return await this._taskRepository.getAll();
   }
@@ -21,6 +21,11 @@ export default class TaskService implements ITaskService {
   async getById(id: string): Promise<Task | null> {
     return await this._taskRepository.getById(id);
   }
+
+  async getTaskByArea(areaId: string): Promise<Task[] | null> {
+    return await this._taskRepository.getByAreaId(areaId);
+  }
+
 
   async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
     const id = generateId();
