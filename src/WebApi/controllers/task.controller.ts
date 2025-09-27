@@ -82,6 +82,7 @@ export default class TaskController {
   updateTask = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: TaskDTO = req.body;
+    const user = decodeToken(req);
 
     if (!id) {
       return res.status(400).json({ message: "TASK ID is required." });
@@ -94,7 +95,7 @@ export default class TaskController {
     }
 
     try {
-      const success = await this.service.updateTask(id, updatedData);
+      const success = await this.service.updateTask(id, updatedData, {role: user.roleId});
 
       if (success) {
         res.status(200).json({
