@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { ITaskService } from "../../Domain.Endpoint/interfaces/services/taskService.interface";
 import { Request, Response } from "express";
 import { TaskDTO } from "../../Domain.Endpoint/dtos/task.dto";
+import { decodeToken } from "../utils/jwtUtils";
 
 @injectable()
 export default class TaskController {
@@ -40,6 +41,19 @@ export default class TaskController {
     }
   };
 
+  getTasksByAreaId = async (req: Request, res: Response) => {
+    const user = decodeToken(req);
+    console.log("Decoded user from token:", user);
+    
+    try {
+      const tasks = await this.service.getTaskByArea(user.areaId);
+      res.status(200).json({ success: true, data: tasks });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Failed to get tasks by area" });
+    }
+  };
+
   addTask = async (req: Request, res: Response) => {
     const taskDto: TaskDTO = req.body;
 
@@ -48,7 +62,7 @@ export default class TaskController {
       !taskDto.assignedTo ||
       !taskDto.createdBy ||
       !taskDto.status ||
-      !taskDto.title 
+      !taskDto.title
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -83,13 +97,11 @@ export default class TaskController {
       const success = await this.service.updateTask(id, updatedData);
 
       if (success) {
-        res
-          .status(200)
-          .json({
-            success: success.success,
-            data: success.data,
-            message: success.message,
-          });
+        res.status(200).json({
+          success: success.success,
+          data: success.data,
+          message: success.message,
+        });
       } else {
         res.status(404).json({ message: "Task not found" });
       }
@@ -108,12 +120,10 @@ export default class TaskController {
       const result = await this.service.deleteTask(id);
 
       if (result) {
-        res
-          .status(200)
-          .json({
-            success: result.success,
-            message: "Task deleted successfully",
-          });
+        res.status(200).json({
+          success: result.success,
+          message: "Task deleted successfully",
+        });
       } else {
         res.status(404).json({ message: "Task not found" });
       }
