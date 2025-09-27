@@ -5,6 +5,7 @@ import { ITaskRepository } from "../interfaces/repositories/taskRepository.inter
 import { ITaskService } from "../interfaces/services/taskService.interface";
 import { ServiceResult } from "../utils/serviceResult.type";
 import { generateId } from "../utils/generateId";
+import { Status } from "../entities/status.enum";
 
 @injectable()
 export default class TaskService implements ITaskService {
@@ -13,7 +14,7 @@ export default class TaskService implements ITaskService {
   constructor(@inject("ITaskRepository") taskRepository: ITaskRepository) {
     this._taskRepository = taskRepository;
   }
-  
+
   async getTasks(): Promise<Task[]> {
     return await this._taskRepository.getAll();
   }
@@ -26,10 +27,9 @@ export default class TaskService implements ITaskService {
     return await this._taskRepository.getByAreaId(areaId);
   }
 
-
   async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
     const id = generateId();
-    const newTask = new Task({id: id, ...task});
+    const newTask = new Task({ id: id, ...task });
     await this._taskRepository.create(newTask);
 
     return { success: true, message: "Task created", data: newTask };
@@ -37,15 +37,20 @@ export default class TaskService implements ITaskService {
 
   async updateTask(
     id: string,
-    task: TaskDTO
+    task: TaskDTO,
+    currentUser: { role: string }
   ): Promise<ServiceResult<Task | null>> {
     const existing = await this._taskRepository.getById(id);
     if (!existing) {
       return { success: false, message: "Task not found", data: null };
     }
-
-    // actualizar solo las propiedades necesarias
-    Object.assign(existing, task);
+    //este es el id de admin en los roles
+    if (currentUser.role !== "2d5c7f8e-1b3a-4c9d-8f0a-7e6b5a4d3c2b" && task.status === Status.DONE) {
+      existing.status = Status.PENDING_VALIDATION;
+    } else {
+      // actualizar solo las propiedades necesarias
+      Object.assign(existing, task);
+    }
     await this._taskRepository.update(existing);
 
     return { success: true, message: "Task updated", data: existing };
