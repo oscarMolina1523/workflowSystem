@@ -101,6 +101,31 @@ router.get("/", taskController.getTasks);
 
 /**
  * @swagger
+ * /tasks/area:
+ *   get:
+ *     summary: Get all tasks for the authenticated user's area
+ *     description: Returns a list of tasks filtered by the user's `areaId` extracted from the JWT token.
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of tasks belonging to the user's area
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Server error
+ */
+router.get("/area", taskController.getTasksByAreaId);
+
+/**
+ * @swagger
  * /tasks/{id}:
  *   get:
  *     summary: Get a task by ID
@@ -125,6 +150,7 @@ router.get("/", taskController.getTasks);
  *         description: Server error
  */
 router.get("/:id", taskController.getTaskById);
+
 
 /**
  * @swagger
