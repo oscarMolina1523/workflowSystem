@@ -2,7 +2,7 @@ import BaseModel from "./base.model";
 
 export default class Area extends BaseModel {
   title: string;
-  description: string;
+  description?: string | undefined;
 
   constructor({
     id,
@@ -11,7 +11,7 @@ export default class Area extends BaseModel {
   }: {
     id: string;
     title: string;
-    description: string;
+    description?: string;
   }) {
     super(id);
     this.title = title;
