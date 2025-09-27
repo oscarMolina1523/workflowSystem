@@ -4,7 +4,7 @@ import { IAreaRepository } from "../../../Domain.Endpoint/interfaces/repositorie
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation } from "../../builders/sqlOperations.enum";
+import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
 
 @injectable()
 export class AreaRepository implements IAreaRepository {
@@ -53,13 +53,30 @@ export class AreaRepository implements IAreaRepository {
     });
   }
 
-  create(role: Area): Promise<void> {
-    throw new Error("Method not implemented.");
+  async create(role: Area): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Role, role)
+      .WithOperation(SqlWriteOperation.Create)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
-  update(role: Area): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async update(role: Area): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Role, role)
+      .WithOperation(SqlWriteOperation.Update)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
-  delete(role: Area): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async delete(role: Area): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Role, role)
+      .WithOperation(SqlWriteOperation.Delete)
+      .BuildWritter();
+      
+    await this._connection.executeNonQuery(writeCommand);
   }
 }
