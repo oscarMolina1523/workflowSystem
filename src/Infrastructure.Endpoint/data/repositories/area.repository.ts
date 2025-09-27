@@ -35,10 +35,24 @@ export class AreaRepository implements IAreaRepository {
         })
     );
   }
-  
-  getById(id: string): Promise<Area | null> {
-    throw new Error("Method not implemented.");
+
+  async getById(id: string): Promise<Area | null> {
+    const readCommand = this._operationBuilder
+      .Initialize(EntityType.Role)
+      .WithOperation(SqlReadOperation.SelectById)
+      .WithId(id)
+      .BuildReader();
+
+    const row = await this._connection.executeScalar(readCommand);
+    if (!row) return null;
+
+    return new Area({
+      id: row["ID"],
+      title: row["TITLE"],
+      description: row["DESCRIPTION"],
+    });
   }
+
   create(role: Area): Promise<void> {
     throw new Error("Method not implemented.");
   }
