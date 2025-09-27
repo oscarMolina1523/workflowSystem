@@ -22,6 +22,8 @@ import RoleRepository from '../Infrastructure.Endpoint/data/repositories/role.re
 import { IRoleService } from '../Domain.Endpoint/interfaces/services/roleService.interface';
 import RoleService from '../Domain.Endpoint/services/role.service';
 import RoleController from './controllers/role.controller';
+import { IAreaRepository } from '../Domain.Endpoint/interfaces/repositories/areaRepository.interface';
+import { AreaRepository } from '../Infrastructure.Endpoint/data/repositories/area.repository';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -45,3 +47,6 @@ container.register<AuthController>('AuthController', { useClass: AuthController 
 container.register<IRoleRepository>('IRoleRepository', { useClass: RoleRepository });
 container.register<IRoleService>('IRoleService', { useClass: RoleService });
 container.register<RoleController>("RoleController", {useClass:RoleController});
+
+//area
+container.register<IAreaRepository>('IAreaRepository', { useClass: AreaRepository });
