@@ -44,13 +44,25 @@ export default class TaskController {
   getTasksByAreaId = async (req: Request, res: Response) => {
     const user = decodeToken(req);
     console.log("Decoded user from token:", user);
-    
+
     try {
       const tasks = await this.service.getTaskByArea(user.areaId);
       res.status(200).json({ success: true, data: tasks });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Failed to get tasks by area" });
+    }
+  };
+
+  getTasksPendingValidation = async (req: Request, res: Response) => {
+    const user = decodeToken(req);
+
+    try {
+      const tasks = await this.service.getTasksPendingValidation({ role: user.roleId });
+      res.status(200).json({ success: true, data: tasks });
+    } catch (error: any) {
+      console.error(error);
+      res.status(403).json({ message: error.message || "Not authorized" });
     }
   };
 
@@ -95,7 +107,9 @@ export default class TaskController {
     }
 
     try {
-      const success = await this.service.updateTask(id, updatedData, {role: user.roleId});
+      const success = await this.service.updateTask(id, updatedData, {
+        role: user.roleId,
+      });
 
       if (success) {
         res.status(200).json({
