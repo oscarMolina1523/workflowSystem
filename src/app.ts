@@ -10,6 +10,7 @@ import userRoutes from "./WebApi/routes/user.routes";
 import authRoutes from "./WebApi/routes/auth.routes";
 import { validateToken } from "./WebApi/utils/jwtUtils";
 import roleRoutes from "./WebApi/routes/role.routes";
+import areaRoutes from "./WebApi/routes/area.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/tasks", validateToken, taskRoutes);
 app.use("/users", validateToken, userRoutes);
 app.use("/roles", validateToken, roleRoutes);
+app.use("/areas", validateToken, areaRoutes);
 
 
 async function startServer() {
