@@ -126,6 +126,37 @@ router.get("/area", taskController.getTasksByAreaId);
 
 /**
  * @swagger
+ * /tasks/pending-validation:
+ *   get:
+ *     summary: Get all tasks pending validation (Admin only)
+ *     description: Returns a list of tasks that are waiting for admin validation (status = PENDING_VALIDATION).
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of tasks pending validation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       403:
+ *         description: Forbidden - only admins can access
+ *       500:
+ *         description: Server error
+ */
+router.get(
+  "/pending-validation",
+  taskController.getTasksPendingValidation
+);
+
+
+/**
+ * @swagger
  * /tasks/{id}:
  *   get:
  *     summary: Get a task by ID
