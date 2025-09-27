@@ -9,6 +9,7 @@ import taskRoutes from "./WebApi/routes/task.routes";
 import userRoutes from "./WebApi/routes/user.routes";
 import authRoutes from "./WebApi/routes/auth.routes";
 import { validateToken } from "./WebApi/utils/jwtUtils";
+import roleRoutes from "./WebApi/routes/role.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use("/auth", authRoutes);
 app.use("/tasks", validateToken, taskRoutes);
 app.use("/users", validateToken, userRoutes);
+app.use("/roles", validateToken, roleRoutes);
 
 
 async function startServer() {
