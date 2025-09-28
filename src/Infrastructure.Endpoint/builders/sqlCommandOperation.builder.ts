@@ -219,10 +219,11 @@ export class SqlCommandReadBuilder<TEntity extends BaseModel>
 
   private getSelectAllQuery(
     entityName: string,
-    columns: SqlColumnSettings[]
+    columns: SqlColumnSettings[],
+    limit = 100
   ): string {
     const columnNames = columns.map((c) => c.name).join(", ");
-    return `SELECT ${columnNames} FROM ${entityName};`;
+    return `SELECT ${columnNames} FROM ${entityName} LIMIT ${limit};`; //limit es para solo traer 100 registros
   }
 
   private getSelectByIdCommand(): SqlCommand {
