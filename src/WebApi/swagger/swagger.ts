@@ -12,9 +12,13 @@ const options = {
       },
     },
     servers: [
+      // {
+      //   url: "http://localhost:3000",
+      //   description: "Local server",
+      // },
       {
-        url: "http://localhost:3000",
-        description: "Local server",
+        url: "https://evolution-system.vercel.app/",
+        description: "Production server",
       },
     ],
     components: {
