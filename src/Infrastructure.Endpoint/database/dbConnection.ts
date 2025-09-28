@@ -11,7 +11,7 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
   private static instance: SingletonSqlConnection;
   private db!: ReturnType<typeof createClient>;
 
-  public constructor(){};
+  public constructor() {}
 
   public static getInstance(): SingletonSqlConnection {
     if (!SingletonSqlConnection.instance) {
@@ -29,12 +29,8 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
       //   driver: sqlite3.Database,
       // });
       this.db = createClient({
-        url:
-          process.env.DATABASE_URL ||
-          "no found",
-        authToken:
-          process.env.DATABASE_AUTH_TOKEN ||
-          "no found",
+        url: process.env.TURSO_DB_URL || "no found",
+        authToken: process.env.TURSO_DB_AUTH_TOKEN || "no found",
       });
       console.log("Conexión SQLite abierta");
     }
@@ -46,7 +42,7 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
     //   this.db = undefined as any;
     //   console.log("Conexión SQLite cerrada");
     // }
-     if (this.db) {
+    if (this.db) {
       // No hay un método close en Turso client, puedes dejarlo en null si quieres "desconectar"
       this.db = null as any;
       console.log("Conexión Turso cerrada");
@@ -54,26 +50,18 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
   }
 
   async executeNonQuery(command: SqlCommand): Promise<void> {
-     try {
-      await this.openConnection();
-      const params = this.mapParameters(command.parameters);
-      //await this.db.run(command.query, params);
-      await this.db.execute(command.query, params);
-    } finally {
-      await this.closeConnection();
-    }
+    await this.openConnection();
+    const params = this.mapParameters(command.parameters);
+    //await this.db.run(command.query, params);
+    await this.db.execute(command.query, params);
   }
 
   async executeQuery(command: SqlCommand): Promise<any[]> {
-    try {
-      await this.openConnection();
-      const params = this.mapParameters(command.parameters);
-      //return await this.db.all(command.query, params);
-      const result = await this.db.execute(command.query, params);
-      return result.rows;
-    } finally {
-      await this.closeConnection();
-    }
+    await this.openConnection();
+    const params = this.mapParameters(command.parameters);
+    //return await this.db.all(command.query, params);
+    const result = await this.db.execute(command.query, params);
+    return result.rows;
   }
   //para sqlite
   // async executeScalar(command: SqlCommand): Promise<any> {
@@ -87,14 +75,10 @@ export class SingletonSqlConnection implements ISingletonSqlConnection {
   // }
 
   async executeScalar(command: SqlCommand): Promise<any | null> {
-    try {
-      await this.openConnection();
-      const params = this.mapParameters(command.parameters);
-      const result = await this.db.execute(command.query, params);
-      return result.rows.length > 0 ? result.rows[0] : null;
-    } finally {
-      await this.closeConnection();
-    }
+    await this.openConnection();
+    const params = this.mapParameters(command.parameters);
+    const result = await this.db.execute(command.query, params);
+    return result.rows.length > 0 ? result.rows[0] : null;
   }
 
   //para sqlite
