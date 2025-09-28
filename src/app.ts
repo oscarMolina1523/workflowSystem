@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from 'express';
-import { initializeDatabase } from './Infrastructure.Endpoint/database/init_db';
+// import { initializeDatabase } from './Infrastructure.Endpoint/database/init_db';
 import "./WebApi/container";
 import swaggerUI from "swagger-ui-express";
 import specs from "./WebApi/swagger/swagger";
@@ -11,6 +11,7 @@ import authRoutes from "./WebApi/routes/auth.routes";
 import { validateToken } from "./WebApi/utils/jwtUtils";
 import roleRoutes from "./WebApi/routes/role.routes";
 import areaRoutes from "./WebApi/routes/area.routes";
+import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
