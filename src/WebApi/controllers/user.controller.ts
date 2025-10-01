@@ -2,6 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IUserService } from "../../Domain.Endpoint/interfaces/services/userService.interfaz";
 import { Request, Response } from "express";
 import { UserDTO } from "../../Domain.Endpoint/dtos/user.dto";
+import bcrypt from "bcryptjs/umd/types";
 
 @injectable()
 export default class UserController {
@@ -77,6 +78,10 @@ export default class UserController {
     }
 
     try {
+      const passwordEncripted= await bcrypt.hash(userDto.password, 10);
+
+      userDto.password = passwordEncripted;
+      
       const response = await this.service.addUser(userDto);
       res.status(201).json({
         success: response.success,
