@@ -29,6 +29,8 @@ import { AreaService } from '../Domain.Endpoint/services/area.service';
 import AreaController from './controllers/area.controller';
 import { ILogRepository } from '../Domain.Endpoint/interfaces/repositories/logRepository.interface';
 import LogRepository from '../Infrastructure.Endpoint/data/repositories/log.repository';
+import { ILogService } from '../Domain.Endpoint/interfaces/services/logService.interface';
+import LogService from '../Domain.Endpoint/services/log.service';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -60,3 +62,4 @@ container.register<AreaController>('AreaController', { useClass: AreaController 
 
 //logs
 container.register<ILogRepository>('ILogRepository', {useClass:LogRepository});
+container.register<ILogService>('ILogService', {useClass: LogService});
