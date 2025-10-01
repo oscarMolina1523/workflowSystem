@@ -4,7 +4,7 @@ import { ILogRepository } from "../../../Domain.Endpoint/interfaces/repositories
 import { ISqlCommandOperationBuilder } from "../../interfaces/sqlCommandOperation.interface";
 import { ISingletonSqlConnection } from "../../interfaces/database/dbConnection.interface";
 import { EntityType } from "../../utils/entityTypes";
-import { SqlReadOperation } from "../../builders/sqlOperations.enum";
+import { SqlReadOperation, SqlWriteOperation } from "../../builders/sqlOperations.enum";
 
 @injectable()
 export default class LogRepository implements ILogRepository {
@@ -60,5 +60,14 @@ export default class LogRepository implements ILogRepository {
           timestamp: row["TIMESTAMP"],
         })
     );
+  }
+
+  async create(log: LogModel): Promise<void> {
+    const writeCommand = this._operationBuilder
+      .From(EntityType.Log, log)
+      .WithOperation(SqlWriteOperation.Create)
+      .BuildWritter();
+
+    await this._connection.executeNonQuery(writeCommand);
   }
 }

@@ -31,6 +31,7 @@ import { ILogRepository } from '../Domain.Endpoint/interfaces/repositories/logRe
 import LogRepository from '../Infrastructure.Endpoint/data/repositories/log.repository';
 import { ILogService } from '../Domain.Endpoint/interfaces/services/logService.interface';
 import LogService from '../Domain.Endpoint/services/log.service';
+import LogController from './controllers/log.controller';
 
 // Registrar clases concretas
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -63,3 +64,4 @@ container.register<AreaController>('AreaController', { useClass: AreaController 
 //logs
 container.register<ILogRepository>('ILogRepository', {useClass:LogRepository});
 container.register<ILogService>('ILogService', {useClass: LogService});
+container.register<LogController>('LogController', {useClass: LogController});
