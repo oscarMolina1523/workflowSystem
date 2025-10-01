@@ -43,7 +43,6 @@ export default class TaskController {
 
   getTasksByAreaId = async (req: Request, res: Response) => {
     const user = decodeToken(req);
-    console.log("Decoded user from token:", user);
 
     try {
       const tasks = await this.service.getTaskByArea(user.areaId);
@@ -68,7 +67,6 @@ export default class TaskController {
 
   getTasksByUserId = async (req: Request, res: Response) => {
     const user = decodeToken(req);
-    console.log("Decoded user from token:", user);
 
     try {
       console.log("User id de authenticado", user.id)

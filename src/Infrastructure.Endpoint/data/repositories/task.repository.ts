@@ -121,7 +121,6 @@ export class TaskRepository implements ITaskRepository {
       .Initialize(EntityType.Task)
       .WithOperation(SqlReadOperation.SelectByField);
 
-    console.log("repository", userId)
     if (!builder.WithField) throw new Error("WithField no implementado");
 
     const readCommand = builder.WithField("assignedTo", userId).BuildReader();
@@ -129,7 +128,6 @@ export class TaskRepository implements ITaskRepository {
     const rows = await this._connection.executeQuery(readCommand);
     if (!rows || rows.length === 0) return [];
 
-    console.log("rows", rows)
     return rows.map(
       (row) =>
         new Task({
