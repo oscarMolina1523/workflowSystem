@@ -66,7 +66,14 @@ export async function initializeDatabase(): Promise<void> {
     for (const user of seedUsers) {
       await db.execute(
         `INSERT OR IGNORE INTO USERS (ID, NAME, EMAIL, PASSWORD, AREA_ID, ROLE_ID) VALUES (?, ?, ?, ?, ?, ?)`,
-        [user.id, user.name, user.email, user.password, user.areaId, user.roleId]
+        [
+          user.id,
+          user.name,
+          user.email,
+          user.password,
+          user.areaId,
+          user.roleId,
+        ]
       );
     }
     console.log("✅ Datos de USERS insertados.");
@@ -89,10 +96,30 @@ export async function initializeDatabase(): Promise<void> {
     for (const task of seedTasks) {
       await db.execute(
         `INSERT OR IGNORE INTO TASKS (ID, TITLE, DESCRIPTION, STATUS, AREA_ID, CREATED_BY, ASSIGNED_TO) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [task.id, task.title, task.description ?? null, task.status, task.areaId, task.createdBy, task.assignedTo]
+        [
+          task.id,
+          task.title,
+          task.description ?? null,
+          task.status,
+          task.areaId,
+          task.createdBy,
+          task.assignedTo,
+        ]
       );
     }
     console.log("✅ Datos de TASKS insertados.");
+
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS LOGS (
+        ID TEXT PRIMARY KEY,
+        USER_ID TEXT NOT NULL,
+        ACTION TEXT NOT NULL,
+        AREA_ID TEXT NOT NULL,
+        DATE_LOGGED TEXT NOT NULL
+      );
+    `);
+
+    console.log("✅ Tabla LOGS creada.");
 
     console.log("✅ Base de datos inicializada correctamente en Turso.");
   } catch (error) {

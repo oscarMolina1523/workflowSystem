@@ -52,7 +52,7 @@ export class EntitiesService implements IEntitiesService {
       new SqlColumnSettings("USER_ID", "userId", false), 
       new SqlColumnSettings("ACTION", "action", false), 
       new SqlColumnSettings("AREA_ID", "areaId", false), 
-      new SqlColumnSettings("TIMESTAMP", "timestamp", false),
+      new SqlColumnSettings("DATE_LOGGED", "timestamp", false),
     ];
 
     // Se define el nombre de la tabla para el modelo Role
