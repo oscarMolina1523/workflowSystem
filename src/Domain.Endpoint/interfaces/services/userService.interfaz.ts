@@ -6,6 +6,7 @@ export interface IUserService {
   getUsers(): Promise<User[]>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
+  getByAreaId(areaId: string): Promise<User[]>;
   addUser(user: UserDTO): Promise<ServiceResult<User>>;
   updateUser(id: string, user: UserDTO): Promise<ServiceResult<User | null>>;
   deleteUser(id: string): Promise<{ success: boolean; message: string }>;
