@@ -3,4 +3,5 @@ export enum EntityType {
   Role = "Role",
   Task="Task",
   User="User",
+  Log="Log"
 }
