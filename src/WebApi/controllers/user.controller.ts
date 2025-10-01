@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IUserService } from "../../Domain.Endpoint/interfaces/services/userService.interfaz";
 import { Request, Response } from "express";
 import { UserDTO } from "../../Domain.Endpoint/dtos/user.dto";
-import bcrypt from "bcryptjs/umd/types";
+import bcrypt from "bcryptjs";
 
 @injectable()
 export default class UserController {

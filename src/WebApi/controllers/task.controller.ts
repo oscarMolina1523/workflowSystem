@@ -71,7 +71,8 @@ export default class TaskController {
     console.log("Decoded user from token:", user);
 
     try {
-      const tasks = await this.service.getTaskByArea(user.id);
+      console.log("User id de authenticado", user.id)
+      const tasks = await this.service.getTasksByUserId(user.id);
       res.status(200).json({ success: true, data: tasks });
     } catch (error) {
       console.log(error);
