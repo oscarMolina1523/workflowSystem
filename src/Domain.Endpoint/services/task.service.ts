@@ -40,6 +40,10 @@ export default class TaskService implements ITaskService {
     return await this._taskRepository.getByStatus("pending_validation");
   }
 
+  async getTasksByUserId(userId: string): Promise<Task[] | null> {
+    return await this._taskRepository.getByUserId(userId);
+  }
+
   async addTask(task: TaskDTO): Promise<ServiceResult<Task>> {
     const id = generateId();
     const newTask = new Task({ id: id, ...task });
