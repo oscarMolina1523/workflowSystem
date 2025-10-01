@@ -66,6 +66,19 @@ export default class TaskController {
     }
   };
 
+  getTasksByUserId = async (req: Request, res: Response) => {
+    const user = decodeToken(req);
+    console.log("Decoded user from token:", user);
+
+    try {
+      const tasks = await this.service.getTaskByArea(user.id);
+      res.status(200).json({ success: true, data: tasks });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Failed to get tasks by area" });
+    }
+  };
+
   addTask = async (req: Request, res: Response) => {
     const taskDto: TaskDTO = req.body;
 
