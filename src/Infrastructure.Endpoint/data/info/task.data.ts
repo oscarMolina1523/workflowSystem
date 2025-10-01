@@ -8,8 +8,8 @@ export const seedTasks: Task[] = [
     description: "Inicializar configuración base de Express + TS",
     status: Status.PENDING,
     areaId: "b90a4c28-568b-4b13-a4f6-82087a13c9e6",
-    createdBy: "admin",
-    assignedTo: "developer",
+    createdBy: "6a82f2e17b7be23e",
+    assignedTo: "6a363595011e43e2",
   },
   {
     id: "b90a4c28-568b-4b13-a4f6-82087a13c9ava",
@@ -17,7 +17,7 @@ export const seedTasks: Task[] = [
     description: "Definir tablas y relaciones para SQLite",
     status: Status.IN_PROGRESS,
     areaId: "8a1b6a7e-4d5c-4f1a-9f23-3a8c5e6b7d41",
-    createdBy: "admin",
-    assignedTo: "qa",
+    createdBy: "6a82f2e17b7be23e",
+    assignedTo: "4de9d825a5b648a2",
   },
 ];

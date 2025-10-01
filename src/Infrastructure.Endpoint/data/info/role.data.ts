@@ -13,12 +13,12 @@ export const seedRoles: Role[] = [
     },
     {
         id: "b1c2d3e4-f5g6-7h8i-9j0k-1l2m3n4o5p6q",
-        name: "DEVELOPER",
+        name: "PLANILLA",
         description: "Empleado con permisos para ver y actualizar el estado de sus tareas asignadas."
     },
     {
         id: "c7d8e9f0-1g2h-3i4j-5k6l-7m8n9o0p1q2r",
-        name: "QA",
+        name: "SERVICIOS PROFESIONALES",
         description: "Empleado de control de calidad con permisos para ver y actualizar el estado de sus tareas asignadas."
     },
     {
