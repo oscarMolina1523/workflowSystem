@@ -116,6 +116,32 @@ export class TaskRepository implements ITaskRepository {
     );
   }
 
+  async getByUserId(userId: string): Promise<Task[]> {
+    const builder = this._operationBuilder
+      .Initialize(EntityType.Task)
+      .WithOperation(SqlReadOperation.SelectByField);
+
+    if (!builder.WithField) throw new Error("WithField no implementado");
+
+    const readCommand = builder.WithField("assignedTo", userId).BuildReader();
+
+    const rows = await this._connection.executeQuery(readCommand);
+    if (!rows || rows.length === 0) return [];
+
+    return rows.map(
+      (row) =>
+        new Task({
+          id: row["ID"],
+          title: row["TITLE"],
+          description: row["DESCRIPTION"],
+          status: row["STATUS"],
+          areaId: row["AREA_ID"],
+          createdBy: row["CREATED_BY"],
+          assignedTo: row["ASSIGNED_TO"],
+        })
+    );
+  }
+
   async create(task: Task): Promise<void> {
     const writeCommand = this._operationBuilder
       .From(EntityType.Task, task)
