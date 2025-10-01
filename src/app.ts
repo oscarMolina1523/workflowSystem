@@ -12,6 +12,7 @@ import { validateToken } from "./WebApi/utils/jwtUtils";
 import roleRoutes from "./WebApi/routes/role.routes";
 import areaRoutes from "./WebApi/routes/area.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
+import logRoutes from "./WebApi/routes/log.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use("/tasks", validateToken, taskRoutes);
 app.use("/users", validateToken, userRoutes);
 app.use("/roles", validateToken, roleRoutes);
 app.use("/areas", validateToken, areaRoutes);
+app.use("/logs", validateToken, logRoutes);
 
 
 async function startServer() {
