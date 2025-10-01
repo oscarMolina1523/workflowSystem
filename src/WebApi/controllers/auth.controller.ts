@@ -4,15 +4,22 @@ import bcrypt from "bcryptjs";
 import { IUserService } from "../../Domain.Endpoint/interfaces/services/userService.interfaz";
 import { PublicUser } from "../../Domain.Endpoint/dtos/user.dto";
 import { generateAccesToken } from "../utils/jwtUtils";
+import { ILogService } from "../../Domain.Endpoint/interfaces/services/logService.interface";
+import { Log } from "../../Domain.Endpoint/entities/log.enum";
 
 const DEFAULT_ROLE_ID = "d9e8f7g6-5h4i-3j2k-1l0m-9n8o7p6q5r4s"; // Viewer
 
 @injectable()
 export default class AuthController {
   private readonly _userService: IUserService;
+  private readonly _logService: ILogService;
 
-  constructor(@inject("IUserService") userService: IUserService) {
+  constructor(
+    @inject("IUserService") userService: IUserService,
+    @inject("ILogService") logService: ILogService
+  ) {
     this._userService = userService;
+    this._logService = logService;
   }
 
   // 🔹 Registro
@@ -53,6 +60,12 @@ export default class AuthController {
 
       // Generar token
       const token = generateAccesToken(publicUser);
+
+      await this._logService.addLog({
+        userId: publicUser.id,
+        action: Log.REGISTER,
+        areaId: publicUser.areaId,
+      });
 
       res.status(201).json({
         message: "Usuario registrado exitosamente",
@@ -102,6 +115,12 @@ export default class AuthController {
       };
 
       const token = generateAccesToken(publicUser);
+
+      await this._logService.addLog({
+        userId: publicUser.id,
+        action: Log.LOGIN,
+        areaId: publicUser.areaId,
+      });
 
       res.json({
         message: "Login exitoso",
