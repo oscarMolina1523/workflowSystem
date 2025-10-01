@@ -84,6 +84,33 @@ export class UserRepository implements IUserRepository {
     });
   }
 
+  async getByAreaId(areaId: string): Promise<User[]> {
+    const builder = this._operationBuilder
+      .Initialize(EntityType.User)
+      .WithOperation(SqlReadOperation.SelectByField);
+
+    if (!builder.WithField) {
+      throw new Error("WithField no implementado");
+    }
+
+    const readCommand = builder.WithField("areaId", areaId).BuildReader();
+
+    const rows = await this._connection.executeQuery(readCommand);
+    if (!rows || rows.length === 0) return [];
+
+    return rows.map(
+      (row) =>
+        new User({
+          id: row["ID"],
+          name: row["NAME"],
+          email: row["EMAIL"],
+          password: row["PASSWORD"],
+          areaId: row["AREA_ID"],
+          roleId: row["ROLE_ID"],
+        })
+    );
+  }
+
   async create(user: User): Promise<void> {
     const writeCommand = this._operationBuilder
       .From(EntityType.User, user)

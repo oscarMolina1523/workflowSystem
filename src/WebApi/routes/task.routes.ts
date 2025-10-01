@@ -154,6 +154,31 @@ router.get(
   taskController.getTasksPendingValidation
 );
 
+/**
+ * @swagger
+ * /tasks/user:
+ *   get:
+ *     summary: Get all tasks assigned to the authenticated user
+ *     description: Returns a list of tasks filtered by the `userId` decoded from the JWT token.
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of tasks assigned to the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Server error
+ */
+router.get("/user", taskController.getTasksByUserId);
+
 
 /**
  * @swagger

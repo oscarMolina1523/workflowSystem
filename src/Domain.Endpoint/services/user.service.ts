@@ -25,6 +25,10 @@ export default class UserService implements IUserService {
     return await this._userRepository.getByEmail(email);
   }
 
+  async getByAreaId(areaId: string): Promise<User[]> {
+    return await this._userRepository.getByAreaId(areaId);
+  }
+
   async addUser(user: UserDTO): Promise<ServiceResult<User>> {
     const id = generateId();
     const newUser = new User({
