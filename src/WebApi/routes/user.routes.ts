@@ -37,7 +37,7 @@ const userController = container.resolve(UserController);
  *         roleId:
  *           type: string
  *           description: Role ID assigned to the user.
- * 
+ *
  *     UserDTO:
  *       type: object
  *       required:
@@ -116,6 +116,31 @@ router.get("/", userController.getUsers);
  *         description: Failed to get user
  */
 router.get("/email/:email", userController.getUserByEmail);
+
+/**
+ * @swagger
+ * /users/area:
+ *   get:
+ *     summary: Get all users that belong to the same area as the authenticated user
+ *     description: Returns a list of users filtered by the `areaId` decoded from the JWT token.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users belonging to the authenticated user's area
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Server error
+ */
+router.get("/area", userController.getUserByAreaId);
 
 /**
  * @swagger

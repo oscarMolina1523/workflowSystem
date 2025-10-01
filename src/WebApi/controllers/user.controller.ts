@@ -3,6 +3,7 @@ import { IUserService } from "../../Domain.Endpoint/interfaces/services/userServ
 import { Request, Response } from "express";
 import { UserDTO } from "../../Domain.Endpoint/dtos/user.dto";
 import bcrypt from "bcryptjs";
+import { decodeToken } from "../utils/jwtUtils";
 
 @injectable()
 export default class UserController {
@@ -62,6 +63,18 @@ export default class UserController {
     } catch {
       res.status(500).json({ message: "Failed to get user" });
     }
+  };
+
+  getUserByAreaId = async (req: Request, res: Response) => {
+      const user = decodeToken(req);
+  
+      try {
+        const tasks = await this.service.getByAreaId(user.areaId);
+        res.status(200).json({ success: true, data: tasks });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Failed to get tasks by area" });
+      }
   };
 
   addUser = async (req: Request, res: Response) => {
