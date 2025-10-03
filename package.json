@@ -20,6 +20,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsyringe": "^4.10.0"
