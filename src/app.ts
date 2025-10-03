@@ -34,6 +34,21 @@ io.on("connection", (socket) => {
 // Hacer io accesible desde cualquier middleware o ruta
 app.set("io", io);
 
+/**
+ * Middleware que detecta cualquier cambio en tasks y notifica a todos los clientes
+ */
+app.use("/tasks", (req, res, next) => {
+  res.on("finish", () => {
+    if (["POST", "PUT", "DELETE"].includes(req.method)) {
+      const io = app.get("io");
+      io.emit("taskUpdated", { message: "Tasks changed" });
+      console.log("Evento taskUpdated emitido");
+    }
+  });
+  next();
+});
+
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors())
@@ -46,17 +61,6 @@ app.use("/roles", validateToken, roleRoutes);
 app.use("/areas", validateToken, areaRoutes);
 app.use("/logs", validateToken, logRoutes);
 
-/**
- * Middleware que detecta cualquier cambio en tasks y notifica a todos los clientes
- */
-app.use("/tasks", (req, res, next) => {
-  res.on("finish", () => {
-    if (["POST", "PUT", "DELETE"].includes(req.method)) {
-      io.emit("taskUpdated", { message: "Tasks changed" });
-    }
-  });
-  next();
-});
 
 async function startServer() {
     try {
@@ -65,7 +69,7 @@ async function startServer() {
         //console.log("Base de datos inicializada.");
 
         // Inicia el servidor solo después de que la base de datos esté lista
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);
         });
     } catch (error) {
