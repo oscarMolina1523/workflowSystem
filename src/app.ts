@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import express from 'express';
+import { Server } from "socket.io";
+import http from "http";
 // import { initializeDatabase } from './Infrastructure.Endpoint/database/init_db';
 import "./WebApi/container";
 import swaggerUI from "swagger-ui-express";
@@ -15,7 +17,22 @@ import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db"
 import logRoutes from "./WebApi/routes/log.routes";
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// Configurar Socket.IO
+const io = new Server(server, {
+  cors: { origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] },
+});
+
+// Conexión de clientes
+io.on("connection", (socket) => {
+  console.log("Cliente conectado:", socket.id);
+  socket.on("disconnect", () => console.log("Cliente desconectado:", socket.id));
+});
+
+// Hacer io accesible desde cualquier middleware o ruta
+app.set("io", io);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -29,6 +46,17 @@ app.use("/roles", validateToken, roleRoutes);
 app.use("/areas", validateToken, areaRoutes);
 app.use("/logs", validateToken, logRoutes);
 
+/**
+ * Middleware que detecta cualquier cambio en tasks y notifica a todos los clientes
+ */
+app.use("/tasks", (req, res, next) => {
+  res.on("finish", () => {
+    if (["POST", "PUT", "DELETE"].includes(req.method)) {
+      io.emit("taskUpdated", { message: "Tasks changed" });
+    }
+  });
+  next();
+});
 
 async function startServer() {
     try {
