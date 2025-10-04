@@ -33,7 +33,7 @@ export default class LogRepository implements ILogRepository {
           userId: row["USER_ID"],
           action: row["ACTION"],
           areaId: row["AREA_ID"],
-          timestamp: row["TIMESTAMP"],
+          timestamp: row["DATE_LOGGED"],
         })
     );
   }
@@ -57,7 +57,7 @@ export default class LogRepository implements ILogRepository {
           userId: row["USER_ID"],
           action: row["ACTION"],
           areaId: row["AREA_ID"],
-          timestamp: row["TIMESTAMP"],
+          timestamp: row["DATE_LOGGED"],
         })
     );
   }
